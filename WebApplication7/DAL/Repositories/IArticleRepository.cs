@@ -12,5 +12,7 @@ namespace WebApplication7.DAL.Repositories
         public Task<Article[]> GetArticleByName(string name);
         public Task<Article[]> GetAll();
         public Task AddTag(Article article, Tag tag);
+        public Task<Article[]> GetArticlesByAuthor(Author author);
+        public Task<Tag[]> GetArticlesTags(Article article);
     }
 }

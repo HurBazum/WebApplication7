@@ -11,5 +11,7 @@ namespace WebApplication7.DAL.Repositories
         public Task<Author> GetAuthorByEmail(string email);
         public Task<Author[]> GetAll();
         public Task UpdateAuthor(Author author, UpdateAuthorQuery updateAuthorQuery);
+
+        public Task<Role[]> GetAuthorsRoles(Author author);
     }
 }

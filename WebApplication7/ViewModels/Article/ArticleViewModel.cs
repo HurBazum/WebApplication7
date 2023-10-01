@@ -1,4 +1,6 @@
-﻿namespace WebApplication7.ViewModels.Article
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebApplication7.ViewModels.Article
 {
     public class ArticleViewModel
     {

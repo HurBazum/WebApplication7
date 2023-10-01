@@ -24,6 +24,7 @@ namespace WebApplication7.Infrastructure
             CreateMap<Article, ArticleViewModel>();
             CreateMap<TagViewModel, Tag>();
             CreateMap<Tag, TagViewModel>();
+            CreateMap<Author, AuthorViewModel>();
         }
     }
 }
