@@ -9,6 +9,7 @@ using WebApplication7.DAL.Enteties;
 using WebApplication7.ViewModels.Account;
 using WebApplication7.ViewModels.Article;
 using WebApplication7.ViewModels.Tag;
+using WebApplication7.ViewModels.Comment;
 
 namespace WebApplication7.Infrastructure
 {
@@ -25,6 +26,8 @@ namespace WebApplication7.Infrastructure
             CreateMap<TagViewModel, Tag>();
             CreateMap<Tag, TagViewModel>();
             CreateMap<Author, AuthorViewModel>();
+            CreateMap<Comment, CommentViewModel>();
+            CreateMap<CreateCommentViewModel, Comment>();
         }
     }
 }

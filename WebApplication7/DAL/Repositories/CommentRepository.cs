@@ -15,19 +15,16 @@ namespace WebApplication7.DAL.Repositories
             var entry = _blogContext.Comments.Entry(comment);
             if(entry.State == EntityState.Detached)
             {
-                await _blogContext.AddAsync(entry);
+                await _blogContext.AddAsync(comment);
                 await _blogContext.SaveChangesAsync();
             }
         }
 
-        public async Task DeleteAuthor(Comment comment)
+        public async Task DeleteComment(Comment comment)
         {
             var entry = _blogContext.Comments.Entry(comment);
-            if(entry.State == EntityState.Detached)
-            {
-                _blogContext.Comments.Remove(comment);
-                await _blogContext.SaveChangesAsync();
-            }
+            entry.State = EntityState.Deleted;
+            await _blogContext.SaveChangesAsync();
         }
 
         public async Task<Comment[]> GetAll() => await _blogContext.Comments.ToArrayAsync();
@@ -35,12 +32,13 @@ namespace WebApplication7.DAL.Repositories
         public async Task<Comment[]> GetCommentByArticle(Article article) => await _blogContext.Comments.Include(a => a.Article).Where(c => c.ArticleId == article.Id).ToArrayAsync();
 
         public async Task<Comment[]> GetCommentByAuthor(Author author) => await _blogContext.Comments.Include(a => a.Author).Where(c => c.AuthorId == author.Id).ToArrayAsync();
-
         public async Task<Comment> GetCommentById(int id) => await _blogContext.Comments.FirstOrDefaultAsync(c => c.Id == id);
 
-        public Task UpdateComment(Comment comment, UpdateCommentQuery updateCommentQuery)
+        public async Task UpdateComment(Comment comment, UpdateCommentQuery updateCommentQuery)
         {
-            throw new NotImplementedException();
+            var entry = _blogContext.Comments.Entry(comment);
+            entry.State = EntityState.Modified;
+            await _blogContext.SaveChangesAsync();
         }
     }
 }

@@ -49,8 +49,8 @@ namespace WebApplication7.Controllers
 
             if (_authorRepository.AddAuthor(author).IsCompletedSuccessfully)
             {
-                //return Ok($"Добро пожаловать, {author.FirstName}");
-                return RedirectToAction("Login", new LoginViewModel { Email = author.Email, Password = author.Password });
+                return Ok($"Добро пожаловать, {author.FirstName}");
+                //return RedirectToAction("Login", new LoginViewModel { Email = author.Email, Password = author.Password });
             }
 
             return StatusCode(415, "");
@@ -62,8 +62,7 @@ namespace WebApplication7.Controllers
         /// изменять можно только свой профиль,
         /// админ может изменять чужие,
         /// св-ва UpdateAuthorRequest могут принимать значения null,
-        /// для этого надо надо вместо значения ввести nullБ
-        /// пока нет 
+        /// для этого надо надо вместо значения ввести null       
         /// </summary>
         [Authorize(Roles = "User, Admin")]
         [HttpPut]
@@ -140,7 +139,6 @@ namespace WebApplication7.Controllers
             }
             else
             {
-                Debug.WriteLine("yt dsikj");
                 return StatusCode(401, "");
             }
         }

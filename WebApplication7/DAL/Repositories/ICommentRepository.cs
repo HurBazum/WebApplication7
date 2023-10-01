@@ -6,7 +6,7 @@ namespace WebApplication7.DAL.Repositories
     public interface ICommentRepository
     {
         public Task AddComment(Comment comment);
-        public Task DeleteAuthor(Comment comment);
+        public Task DeleteComment(Comment comment);
         public Task<Comment> GetCommentById(int id);
         public Task<Comment[]> GetCommentByAuthor(Author author);
         public Task<Comment[]> GetCommentByArticle(Article article);
