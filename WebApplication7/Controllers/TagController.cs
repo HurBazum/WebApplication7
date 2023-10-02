@@ -59,6 +59,23 @@ namespace WebApplication7.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("/Tags/{id}")]
+        public async Task<IActionResult> GetOneTag([FromRoute]int id)
+        {
+            var tag = await _tagRepository.GetTagById(id);
+
+            if(tag == null)
+            {
+                return BadRequest($"Тега с id={id} не существует!");
+            }
+
+            var model = _mapper.Map<TagViewModel>(tag);
+
+            return Ok(model);
+        }
+
         [Authorize(Roles = "Moderator")]
         [HttpDelete]
         [Route("/DeleteTag/{id}")]

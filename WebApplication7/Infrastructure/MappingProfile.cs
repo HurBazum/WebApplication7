@@ -30,6 +30,7 @@ namespace WebApplication7.Infrastructure
             CreateMap<TagViewModel, Tag>();
             CreateMap<Tag, TagViewModel>();
             CreateMap<Author, AuthorViewModel>();
+            CreateMap<AuthorViewModel, Author>();
             CreateMap<Comment, CommentViewModel>();
             CreateMap<CreateCommentViewModel, Comment>();
         }

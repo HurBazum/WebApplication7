@@ -2,5 +2,7 @@
 {
     public class AuthorViewModel : RegisterViewModel
     {
+        public int CommentsCount { get; set; }
+        public int ArticlesCount { get; set; }
     }
 }

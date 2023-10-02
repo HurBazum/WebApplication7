@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
+using System.Xml.Linq;
+using WebApplication7.ViewModels.Article;
 
 namespace WebApplication7.Controllers
 {
@@ -31,6 +33,58 @@ namespace WebApplication7.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// получение одного автора по Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        [Route("/All_Authors/{id}")]
+        public async Task<IActionResult> GetOneAuthor([FromRoute]int id)
+        {
+            var author = await _authorRepository.GetAuthorById(id);
+
+            if (author == null)
+            {
+                return BadRequest($"Автор с id={id} не существует!");
+            }
+
+            var model = _mapper.Map<AuthorViewModel>(author);
+
+            model.ArticlesCount = _articleRepository.GetArticlesByAuthor(author).Result.Length;
+            model.CommentsCount = _commentRepository.GetCommentByAuthor(author).Result.Length;
+
+            return Ok(model);
+        }
+
+        /// <summary>
+        /// получение всех авторов
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet]
+        [Route("/All_Authors")]
+        public async Task<IActionResult> GetAllAuthors()
+        {
+            var authors = await _authorRepository.GetAll();
+            AuthorViewModel[] models = new AuthorViewModel[authors.Length];
+
+            for(int i = 0; i < authors.Length; i++)
+            {
+                models[i] = _mapper.Map<AuthorViewModel>(authors[i]);
+                models[i].CommentsCount = _commentRepository.GetCommentByAuthor(authors[i]).Result.Length;
+                models[i].ArticlesCount = _articleRepository.GetArticlesByAuthor(authors[i]).Result.Length;
+            }
+
+            return Ok(models);
+        }
+
+        /// <summary>
+        /// регистрация
+        /// </summary>
+        /// <param name="registerViewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("/Register")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel registerViewModel)
@@ -63,6 +117,7 @@ namespace WebApplication7.Controllers
         /// админ может изменять чужие,
         /// св-ва UpdateAuthorRequest могут принимать значения null,
         /// для этого надо надо вместо значения ввести null       
+        /// поменяв свой емейл, стоит перезайти, ничего не работает
         /// </summary>
         [Authorize(Roles = "User, Admin")]
         [HttpPut]
