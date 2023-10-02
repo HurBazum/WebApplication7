@@ -28,6 +28,20 @@ namespace WebApplication7.Controllers
         }
 
         /// <summary>
+        /// для просмотра всех комментариев
+        /// для Moderator
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "Moderator")]
+        [HttpGet]
+        [Route("/AllComments")]
+        public async Task<IActionResult> GetAllComments()
+        {
+            var allComments = await _commentRepository.GetAll();
+            return Ok(allComments);
+        }
+
+        /// <summary>
         /// получение одного комментария по его идентификатору
         /// </summary>
         [Authorize]
@@ -36,8 +50,22 @@ namespace WebApplication7.Controllers
         public async Task<IActionResult> GetOneComment([FromRoute]int id)
         {
             var comment = await _commentRepository.GetCommentById(id);
-            return Ok(_mapper.Map<CommentViewModel>(comment));
+
+            if(comment == null)
+            {
+                return BadRequest($"Комментария с id={id} не существует!");
+            }
+            var result = _mapper.Map<CommentViewModel>(comment);
+
+            // устанавливаем авторство по логину
+            result.Author = _authorRepository.GetAuthorById(comment.AuthorId).Result.Login;
+
+            // устанавливаем название статьи
+            result.Article = _articleRepository.GetArticleById(comment.ArticleId).Result.Title;
+
+            return Ok(result);
         }
+
         /// <summary>
         /// удаление комментария по его идентификатору
         /// </summary>
@@ -47,7 +75,16 @@ namespace WebApplication7.Controllers
         public async Task<IActionResult> DeleteComment([FromRoute]int id)
         {
             var comment = await _commentRepository.GetCommentById(id);
+            var currentUser = await _authorRepository.GetAuthorByEmail(HttpContext.User.Claims.First().Value);
+            var isModerator = HttpContext.User.Claims.ToList().Any(claim => claim.Value == "Moderator");
+
+            if(currentUser.Id != comment.AuthorId && isModerator == false)
+            {
+                return BadRequest("Вам нельзя удалять чужие комментарии");
+            }
+
             await _commentRepository.DeleteComment(comment);
+
             return Ok($"Комментарий с id={id} был успешно удалён!");
         }
 
@@ -75,18 +112,29 @@ namespace WebApplication7.Controllers
             return Ok($"Комментарий успешно добавлен к статье");
         }
 
-        [Authorize]
+        [Authorize(Roles = "User, Moderator")]
         [HttpPut]
         [Route("/ChangeComment/{id}")]
         public async Task<IActionResult> ChangeComment([FromRoute]int id, [FromBody]UpdateCommentRequest ucr)
         {
             var comment = await _commentRepository.GetCommentById(id);
+
             if(comment == null)
             {
                 return BadRequest($"Комментарий с таким id={id} не существует!");
             }
 
+            var currentUser = await _authorRepository.GetAuthorByEmail(HttpContext.User.Claims.First().Value);
+
+            var isModerator = HttpContext.User.Claims.ToList().Any(claim => claim.Value == "Moderator");
+
+            if (currentUser.Id != comment.AuthorId && isModerator == false)
+            {
+                return BadRequest("Вам нельзя изменять чужие комментарии");
+            }
+
             await _commentRepository.UpdateComment(comment, _mapper.Map<UpdateCommentQuery>(ucr));
+
             return Ok("Комментарий успешно исправлен!");
         }
     }

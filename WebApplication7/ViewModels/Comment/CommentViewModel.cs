@@ -2,7 +2,6 @@
 {
     public class CommentViewModel : CreateCommentViewModel
     {
-        public DateTime CreatedDate { get; set; }
         public string Article { get; set; }
         public string Author { get; set; }
     }

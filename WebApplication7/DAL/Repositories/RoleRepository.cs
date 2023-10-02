@@ -11,7 +11,5 @@ namespace WebApplication7.DAL.Repositories
 
         public async Task<Role[]> GetAll() => await _blogContext.Roles.ToArrayAsync();
         public async Task<Role> GetRoleById(int id) => await _blogContext.Roles.FirstOrDefaultAsync(x => x.Id == id);
-
-        public async Task<Role[]> GetAuthorRolesAsync(Author author) => await _blogContext.Roles.Include(r => r.Authors.Where(a => a.Equals(author))).ToArrayAsync();
     }
 }

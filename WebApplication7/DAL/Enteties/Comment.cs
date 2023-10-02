@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Content { get; set; }
-        public DateTime CreatedDate { get; init; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; }
 
         // rel
         public int ArticleId { get; set; }

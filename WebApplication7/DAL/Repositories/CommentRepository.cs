@@ -36,6 +36,7 @@ namespace WebApplication7.DAL.Repositories
 
         public async Task UpdateComment(Comment comment, UpdateCommentQuery updateCommentQuery)
         {
+            comment.Content = CommentsContentConverter.Convert(comment, updateCommentQuery);
             var entry = _blogContext.Comments.Entry(comment);
             entry.State = EntityState.Modified;
             await _blogContext.SaveChangesAsync();

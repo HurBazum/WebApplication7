@@ -21,11 +21,8 @@ namespace WebApplication7.DAL.Repositories
         public async Task DeleteTag(Tag tag)
         {
             var entry = _blogContext.Tags.Entry(tag);
-            if(entry.State == EntityState.Detached)
-            {
-                _blogContext.Tags.Remove(tag);
-                await _blogContext.SaveChangesAsync();
-            }
+            entry.State = EntityState.Deleted;
+            await _blogContext.SaveChangesAsync();
         }
 
         public async Task<Tag[]> GetAll() => await _blogContext.Tags.ToArrayAsync();
@@ -37,11 +34,8 @@ namespace WebApplication7.DAL.Repositories
         {
             tag = TagConverter.Convert(tag, updateTagQuery);
             var entry = _blogContext.Tags.Entry(tag);
-            if(entry.State == EntityState.Detached)
-            {
-                _blogContext.Tags.Update(tag);
-                await _blogContext.SaveChangesAsync();
-            }
+            entry.State = EntityState.Modified;
+            await _blogContext.SaveChangesAsync();
         }
     }
 }

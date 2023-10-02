@@ -6,6 +6,5 @@ namespace WebApplication7.DAL.Repositories
     {
         public Task<Role[]> GetAll();
         public Task<Role> GetRoleById(int id);
-        public Task<Role[]> GetAuthorRolesAsync(Author author);
     }
 }

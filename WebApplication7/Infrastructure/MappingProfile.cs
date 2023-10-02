@@ -10,6 +10,8 @@ using WebApplication7.ViewModels.Account;
 using WebApplication7.ViewModels.Article;
 using WebApplication7.ViewModels.Tag;
 using WebApplication7.ViewModels.Comment;
+using WebApplication7.BLL.Models.Tag;
+using WebApplication7.DAL.Queries.Tag;
 
 namespace WebApplication7.Infrastructure
 {
@@ -20,6 +22,8 @@ namespace WebApplication7.Infrastructure
             CreateMap<UpdateAuthorRequest, UpdateAuthorQuery>();
             CreateMap<UpdateCommentRequest, UpdateCommentQuery>();
             CreateMap<UpdateArticleRequest, UpdateArticleQuery>();
+            CreateMap<UpdateTagRequest, UpdateTagQuery>();
+
             CreateMap<RegisterViewModel, Author>();
             CreateMap<ArticleViewModel, Article>();
             CreateMap<Article, ArticleViewModel>();
